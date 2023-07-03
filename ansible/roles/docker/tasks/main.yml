@@ -1,0 +1,31 @@
+---
+- name: Add Docker repo
+  command:
+    cmd: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Install Docker
+  dnf:
+    name: docker-ce
+    state: latest
+    update_cache: yes
+
+- name: Enable Docker service
+  systemd:
+    name: docker
+    enabled: yes
+
+- name: Start Docker service
+  systemd:
+    name: docker
+    state: started
+
+- name: Add user to docker group
+  user:
+    name: vagrant
+    groups: docker
+    append: yes
+
+- name: Restart Docker service
+  systemd:
+    name: docker
+    state: restarted
